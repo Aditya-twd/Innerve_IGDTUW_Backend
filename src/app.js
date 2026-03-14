@@ -12,8 +12,21 @@ const analyticsRoutes = require('./routes/analytics.routes');
 
 const app = express();
 
+const allowedOrigins = new Set(config.corsOrigins);
+
 // Basic middleware
-app.use(cors());
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow non-browser clients and same-origin requests that omit Origin.
+      if (!origin || allowedOrigins.has(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(morgan('dev'));
 

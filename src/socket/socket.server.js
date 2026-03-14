@@ -1,5 +1,6 @@
 const { Server } = require('socket.io');
 const prisma = require('../config/prisma');
+const config = require('../config/env');
 const analyticsService = require('../services/analytics.service');
 
 let io;
@@ -7,8 +8,9 @@ let io;
 function initSocket(server) {
   io = new Server(server, {
     cors: {
-      origin: '*',
+      origin: config.corsOrigins,
       methods: ['GET', 'POST'],
+      credentials: true,
     },
   });
 
